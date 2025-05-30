@@ -647,6 +647,10 @@
             </div>
           </div>
         </div>
+        <div class="form-group">
+          <label for="duplicateCount">Número de duplicatas:</label>
+          <input type="number" id="duplicateCount" min="1" value="1" />
+        </div>
         <button type="submit" class="save-btn">Salvar Produto</button>
         <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancelar</button>
       </form>
@@ -775,9 +779,11 @@
       document.getElementById("stockFull").value = product.stock.full;
       document.getElementById("stockSP").value = product.stock.sp;
       document.getElementById("stockMASP").value = product.stock.masp;
+      document.getElementById("duplicateCount").value = 1;
     } else {
       editingProductId = null;
       document.getElementById("productForm").reset();
+      document.getElementById("duplicateCount").value = 1;
     }
 
     document.getElementById("productSKU").focus();
@@ -857,7 +863,9 @@
   document.getElementById("productForm").addEventListener("submit", function(e){
     e.preventDefault();
 
-    const newData = {
+    const duplicateCount = parseInt(document.getElementById("duplicateCount").value, 10) || 1;
+
+    const baseData = {
       sku: document.getElementById("productSKU").value.trim(),
       name: document.getElementById("productName").value.trim(),
       image: document.getElementById("productImage").value.trim(),
@@ -876,11 +884,16 @@
       // Atualiza produto existente
       const index = products.findIndex(p => p.id === editingProductId);
       if(index !== -1){
-        products[index] = {...products[index], ...newData};
+        products[index] = {...products[index], ...baseData};
       }
     } else {
-      // Adiciona novo produto
-      products.push({id: Date.now(), ...newData});
+      // Adiciona produto(s) novos, duplicando conforme o número
+      for(let i = 0; i < duplicateCount; i++){
+        products.push({
+          id: Date.now() + i,
+          ...baseData
+        });
+      }
     }
 
     saveData();
