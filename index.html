@@ -205,6 +205,7 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
   }
   .product-card:hover {
     transform: translateY(-8px);
@@ -416,6 +417,22 @@
   .save-btn:hover {
     transform: translateY(-2px);
   }
+  .cancel-btn {
+    margin-top: 10px;
+    background: #999;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .cancel-btn:hover {
+    background: #666;
+  }
   .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -546,7 +563,7 @@
     </div>
   </div>
 
-  <!-- Modal adicionar produto -->
+  <!-- Modal adicionar/editar produto -->
   <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
@@ -631,6 +648,7 @@
           </div>
         </div>
         <button type="submit" class="save-btn">Salvar Produto</button>
+        <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancelar</button>
       </form>
     </div>
   </div>
@@ -641,6 +659,7 @@
   };
 
   let products = [];
+  let editingProductId = null;
 
   function loadData() {
     const data = localStorage.getItem("productsData");
@@ -693,7 +712,7 @@
       else if (rank <= 3) rankClass = "top-3";
 
       return `
-        <div class="product-card">
+        <div class="product-card" tabindex="0" role="button" aria-pressed="false" onclick="openModalById(${p.id})" onkeypress="if(event.key==='Enter'){openModalById(${p.id})}">
           <div class="ranking-badge ${rankClass}">${rank}º</div>
           <img src="${p.image || 'https://via.placeholder.com/120x120?text=Produto'}"
             alt="${p.name}" class="product-image"
@@ -739,6 +758,48 @@
     updateStats(filtered);
   }
 
+  function openModal(product = null) {
+    const modal = document.getElementById("productModal");
+    modal.style.display = "block";
+    modal.setAttribute("aria-hidden", "false");
+
+    if (product) {
+      editingProductId = product.id;
+      document.getElementById("productSKU").value = product.sku;
+      document.getElementById("productName").value = product.name;
+      document.getElementById("productImage").value = product.image;
+      document.getElementById("productMonth").value = product.month;
+      document.getElementById("productChannel").value = product.channel;
+      document.getElementById("productUnits").value = product.units;
+      document.getElementById("productRevenue").value = product.revenue;
+      document.getElementById("stockFull").value = product.stock.full;
+      document.getElementById("stockSP").value = product.stock.sp;
+      document.getElementById("stockMASP").value = product.stock.masp;
+    } else {
+      editingProductId = null;
+      document.getElementById("productForm").reset();
+    }
+
+    document.getElementById("productSKU").focus();
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("productModal");
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    document.getElementById("productForm").reset();
+    editingProductId = null;
+  }
+
+  function cancelEdit() {
+    closeModal();
+  }
+
+  function openModalById(id) {
+    const product = products.find(p => p.id === id);
+    if (product) openModal(product);
+  }
+
   function updateStats(filtered) {
     const totalProducts = filtered.length;
     const totalSales = filtered.reduce((sum, p) => sum + p.revenue, 0);
@@ -778,20 +839,6 @@
     }
   }
 
-  function openModal() {
-    const modal = document.getElementById("productModal");
-    modal.style.display = "block";
-    modal.setAttribute("aria-hidden", "false");
-    document.getElementById("productSKU").focus();
-  }
-
-  function closeModal() {
-    const modal = document.getElementById("productModal");
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true");
-    document.getElementById("productForm").reset();
-  }
-
   document.getElementById("loginForm").addEventListener("submit", function(e){
     e.preventDefault();
     const username = document.getElementById("username").value.trim();
@@ -810,8 +857,7 @@
   document.getElementById("productForm").addEventListener("submit", function(e){
     e.preventDefault();
 
-    const newProduct = {
-      id: Date.now(),
+    const newData = {
       sku: document.getElementById("productSKU").value.trim(),
       name: document.getElementById("productName").value.trim(),
       image: document.getElementById("productImage").value.trim(),
@@ -826,7 +872,17 @@
       }
     };
 
-    products.push(newProduct);
+    if(editingProductId !== null){
+      // Atualiza produto existente
+      const index = products.findIndex(p => p.id === editingProductId);
+      if(index !== -1){
+        products[index] = {...products[index], ...newData};
+      }
+    } else {
+      // Adiciona novo produto
+      products.push({id: Date.now(), ...newData});
+    }
+
     saveData();
     renderProducts();
     closeModal();
