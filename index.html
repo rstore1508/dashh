@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard de Vendas - Ranking de Produtos</title>
+<title>Dashboard de Vendas - Ranking e Estoque</title>
 <style>
+  /* --- Reuso dos estilos do seu código, com pequenas adaptações --- */
+
   /* Reset básico */
   * {
     margin: 0;
@@ -35,7 +37,6 @@
     line-height: 1.6;
   }
   
-  /* Componentes utilitários */
   .btn {
     padding: 12px 24px;
     border: none;
@@ -80,85 +81,7 @@
     padding: 8px 16px;
     font-size: 12px;
   }
-  
-  .card {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-  }
-  
-  /* Login Screen */
-  .login-screen {
-    position: fixed;
-    inset: 0;
-    background: var(--gradient);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  
-  .login-container {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 48px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.3);
-  }
-  
-  .login-title {
-    font-size: 28px;
-    font-weight: 800;
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 32px;
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .form-input {
-    padding: 16px 20px;
-    border: 2px solid var(--border);
-    border-radius: 16px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background: rgba(255,255,255,0.8);
-  }
-  
-  .form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
-    background: white;
-  }
-  
-  .login-error {
-    color: var(--danger);
-    margin-top: 12px;
-    display: none;
-    font-weight: 500;
-    padding: 12px;
-    background: rgba(231,76,60,0.1);
-    border-radius: 8px;
-  }
-  
+
   /* Dashboard Principal */
   .main-dashboard {
     display: none;
@@ -166,8 +89,8 @@
     max-width: 1600px;
     margin: 0 auto;
   }
-  
-  /* Header melhorado */
+
+  /* Header */
   .header {
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(20px);
@@ -177,7 +100,7 @@
     box-shadow: var(--shadow);
     border: 1px solid rgba(255,255,255,0.2);
   }
-  
+
   .header-top {
     display: flex;
     justify-content: space-between;
@@ -186,7 +109,7 @@
     flex-wrap: wrap;
     gap: 16px;
   }
-  
+
   .header h1 {
     font-size: 32px;
     font-weight: 800;
@@ -194,7 +117,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  
+
   .user-info {
     display: flex;
     align-items: center;
@@ -203,7 +126,7 @@
     background: rgba(102,126,234,0.1);
     border-radius: 16px;
   }
-  
+
   .user-avatar {
     width: 40px;
     height: 40px;
@@ -215,27 +138,27 @@
     color: white;
     font-weight: 700;
   }
-  
-  /* Controles melhorados */
+
+  /* Controles */
   .controls {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     align-items: end;
   }
-  
+
   .filter-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .filter-group label {
     font-weight: 600;
     color: var(--dark);
     font-size: 14px;
   }
-  
+
   .form-select, .form-input {
     padding: 12px 16px;
     border: 2px solid var(--border);
@@ -244,28 +167,28 @@
     transition: all 0.3s ease;
     background: white;
   }
-  
+
   .form-select:focus, .form-input:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
   }
-  
+
   /* Quick Actions */
   .quick-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
   }
-  
-  /* Stats Overview melhorado */
+
+  /* Stats Overview */
   .stats-overview {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 24px;
     margin-bottom: 32px;
   }
-  
+
   .stat-card {
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(20px);
@@ -278,7 +201,7 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   .stat-card::before {
     content: '';
     position: absolute;
@@ -288,12 +211,12 @@
     height: 4px;
     background: var(--gradient);
   }
-  
+
   .stat-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
   }
-  
+
   .stat-icon {
     width: 64px;
     height: 64px;
@@ -305,7 +228,7 @@
     justify-content: center;
     font-size: 24px;
   }
-  
+
   .stat-number {
     font-size: 32px;
     font-weight: 800;
@@ -314,27 +237,27 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 8px;
   }
-  
+
   .stat-label {
     color: #666;
     font-size: 16px;
     font-weight: 500;
   }
-  
+
   .stat-trend {
     margin-top: 8px;
     font-size: 14px;
     font-weight: 600;
   }
-  
+
   .trend-up {
     color: var(--success);
   }
-  
+
   .trend-down {
     color: var(--danger);
   }
-  
+
   /* Chart Container */
   .chart-container {
     background: rgba(255,255,255,0.95);
@@ -345,51 +268,49 @@
     box-shadow: var(--shadow);
     border: 1px solid rgba(255,255,255,0.2);
   }
-  
+
   .chart-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
   }
-  
+
   .chart-title {
     font-size: 20px;
     font-weight: 700;
     color: var(--dark);
   }
-  
-  /* Products Grid melhorado */
-  .products-section {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  
-  .section-header {
+
+  /* Tabs */
+  .tabs {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
     gap: 16px;
+    margin-bottom: 24px;
   }
-  
-  .section-title {
-    font-size: 24px;
+  .tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+    border-radius: 24px;
     font-weight: 700;
-    color: var(--dark);
+    user-select: none;
+    transition: background-color 0.3s ease;
   }
-  
-  .products-grid {
+  .tab.active {
+    background: var(--gradient);
+    color: white;
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Products Grid and Stock Grid */
+  .products-grid, .stock-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 24px;
   }
-  
+
+  /* Product Card */
   .product-card {
     background: white;
     border-radius: 20px;
@@ -399,53 +320,15 @@
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    border: 2px solid transparent;
     display: flex;
     align-items: center;
   }
-  
+
   .product-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
-    border-color: var(--primary);
   }
-  
-  .product-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-  }
-  
-  .ranking-badge {
-    background: var(--gradient);
-    color: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 16px;
-    box-shadow: var(--shadow);
-  }
-  
-  .ranking-badge.top-1 {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-    animation: pulse 2s infinite;
-  }
-  
-  .ranking-badge.top-3 {
-    background: linear-gradient(135deg, #feca57, #ff9ff3);
-  }
-  
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-  
+
   .product-image {
     width: 100px;
     height: 100px;
@@ -454,17 +337,17 @@
     border: 3px solid var(--border);
     transition: all 0.3s ease;
   }
-  
+
   .product-card:hover .product-image {
     transform: scale(1.05);
     border-color: var(--primary);
   }
-  
+
   .product-info {
     flex: 1;
     margin-left: 16px;
   }
-  
+
   .product-sku {
     font-size: 12px;
     color: #666;
@@ -472,7 +355,7 @@
     margin-bottom: 4px;
     text-transform: uppercase;
   }
-  
+
   .product-name {
     font-size: 18px;
     font-weight: 700;
@@ -480,14 +363,14 @@
     margin-bottom: 12px;
     line-height: 1.3;
   }
-  
+
   .product-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin: 16px 0;
   }
-  
+
   .stat-item {
     text-align: center;
     padding: 16px 12px;
@@ -495,105 +378,63 @@
     border-radius: 12px;
     border: 1px solid rgba(102,126,234,0.1);
   }
-  
+
   .stat-value {
     font-size: 18px;
     font-weight: 800;
     color: var(--primary);
     margin-bottom: 4px;
   }
-  
+
   .stat-text {
     font-size: 12px;
     color: #666;
     font-weight: 500;
   }
-  
-  /* Stock Section melhorado */
-  .stock-section {
-    margin-top: 16px;
-    padding: 16px;
-    background: rgba(39,174,96,0.05);
-    border-radius: 12px;
-    border: 1px solid rgba(39,174,96,0.2);
-  }
-  
-  .stock-title {
-    font-weight: 700;
-    color: var(--success);
-    margin-bottom: 12px;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .stock-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-  
-  .stock-item {
-    text-align: center;
-    padding: 12px 8px;
+
+  /* Stock Card Simplificado */
+  .stock-card {
     background: white;
-    border-radius: 8px;
-    border: 2px solid var(--success);
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  
-  .stock-item.low-stock {
-    border-color: var(--danger);
-    background: rgba(231,76,60,0.05);
-  }
-  
-  .stock-location {
-    font-size: 10px;
+
+  .stock-sku {
     font-weight: 700;
-    color: var(--success);
-    text-transform: uppercase;
+    font-size: 14px;
+    color: var(--dark);
+    width: 20%;
   }
-  
-  .stock-item.low-stock .stock-location {
+  .stock-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--primary);
+    width: 50%;
+  }
+  .stock-quantity {
+    font-weight: 800;
+    font-size: 16px;
+    width: 15%;
+    text-align: right;
+  }
+  .stock-status {
+    font-weight: 600;
+    font-size: 14px;
+    width: 15%;
+    text-align: right;
+  }
+  .low-stock {
     color: var(--danger);
   }
-  
-  .stock-quantity {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--dark);
-    margin-top: 4px;
+  .normal-stock {
+    color: var(--success);
   }
-  
-  /* Tags melhoradas */
-  .product-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 16px;
-  }
-  
-  .tag {
-    background: var(--gradient);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-  
-  .tag.warning {
-    background: var(--danger);
-    animation: blink 1.5s infinite;
-  }
-  
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.7; }
-  }
-  
-  /* Modal melhorado */
+
+  /* Modal */
   .modal {
     display: none;
     position: fixed;
@@ -603,12 +444,12 @@
     z-index: 1000;
     animation: fadeIn 0.3s ease;
   }
-  
+
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
   }
-  
+
   .modal-content {
     position: absolute;
     top: 50%;
@@ -624,12 +465,12 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: slideIn 0.3s ease;
   }
-  
+
   @keyframes slideIn {
     from { transform: translate(-50%, -60%); opacity: 0; }
     to { transform: translate(-50%, -50%); opacity: 1; }
   }
-  
+
   .modal-header {
     display: flex;
     justify-content: space-between;
@@ -638,13 +479,13 @@
     padding-bottom: 16px;
     border-bottom: 2px solid var(--border);
   }
-  
+
   .modal-title {
     font-size: 24px;
     font-weight: 800;
     color: var(--dark);
   }
-  
+
   .close-btn {
     background: none;
     border: none;
@@ -659,178 +500,42 @@
     justify-content: center;
     transition: all 0.3s ease;
   }
-  
+
   .close-btn:hover {
     background: rgba(231,76,60,0.1);
     color: var(--danger);
   }
-  
+
   .form-group {
     margin-bottom: 20px;
   }
-  
+
   .form-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     color: var(--dark);
   }
-  
-  .form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
+
+  textarea.form-input {
+    height: 120px;
+    resize: vertical;
+    font-family: monospace, monospace;
   }
-  
-  /* Empty State */
-  .empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    color: #666;
-  }
-  
-  .empty-icon {
-    font-size: 64px;
-    margin-bottom: 16px;
-    opacity: 0.5;
-  }
-  
-  .empty-state h3 {
-    margin-bottom: 8px;
-    font-size: 24px;
-    color: var(--dark);
-  }
-  
-  .empty-state p {
-    font-size: 16px;
-    margin-bottom: 24px;
-  }
-  
-  /* Loading State */
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-  }
-  
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--border);
-    border-top: 4px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* Tooltips */
-  .tooltip {
-    position: relative;
-    cursor: help;
-  }
-  
-  .tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--dark);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-  }
-  
-  .tooltip:hover::after {
-    opacity: 1;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1200px) {
-    .products-grid {
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    }
-  }
-  
+
+  /* Responsive */
   @media (max-width: 768px) {
-    .main-dashboard {
-      padding: 16px;
+    .stock-card, .product-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
     }
-    
-    .header {
-      padding: 24px;
-    }
-    
-    .header h1 {
-      font-size: 24px;
-    }
-    
-    .controls {
-      grid-template-columns: 1fr;
-    }
-    
-    .stats-overview {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    
-    .products-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .modal-content {
-      width: 95%;
-      padding: 24px;
-    }
-    
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-    
-    .user-info {
-      display: none;
+    .stock-sku, .stock-name, .stock-quantity, .stock-status {
+      width: 100%;
+      text-align: left;
     }
   }
-  
-  @media (max-width: 480px) {
-    .login-container {
-      padding: 32px 24px;
-    }
-    
-    .header-top {
-      flex-direction: column;
-      text-align: center;
-    }
-    
-    .quick-actions {
-      justify-content: center;
-    }
-    
-    .stat-card {
-      padding: 24px;
-    }
-    
-    .product-header {
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    
-    .product-info {
-      margin-left: 0;
-      text-align: center;
-    }
-  }
+
 </style>
 </head>
 <body>
@@ -862,7 +567,7 @@
         <button type="submit" class="btn btn-primary" aria-label="Acessar Dashboard">
           <span>🔓</span> Acessar Dashboard
         </button>
-        <div id="loginError" class="login-error" role="alert" aria-live="assertive">❌ Usuário ou senha incorretos!</div>
+        <div id="loginError" class="login-error" role="alert" aria-live="assertive" style="display:none;">❌ Usuário ou senha incorretos!</div>
       </form>
       <div style="margin-top: 24px; font-size: 12px; color: #999;">
         <strong>Credenciais de teste:</strong><br>
@@ -873,7 +578,7 @@
 
   <!-- Dashboard Principal -->
   <div id="mainDashboard" class="main-dashboard" aria-hidden="true">
-    <!-- Header melhorado -->
+    <!-- Header -->
     <div class="header">
       <div class="header-top">
         <h1>📊 Dashboard de Vendas</h1>
@@ -933,15 +638,15 @@
             <button class="btn btn-primary" onclick="openModal()" aria-label="Adicionar Novo Produto">
               <span>➕</span> Novo Produto
             </button>
-            <button class="btn btn-success" onclick="openBulkImportModal && openBulkImportModal()" aria-label="Importar Produtos">
-              <span>📥</span> Importar
+            <button class="btn btn-success" onclick="openImportModal()" aria-label="Importar Produtos">
+              <span>📥</span> Importar CSV
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Cards de estatísticas melhorados -->
+    <!-- Cards de estatísticas -->
     <div class="stats-overview">
       <div class="stat-card" tabindex="0" aria-label="Total de Produtos">
         <div class="stat-icon">📦</div>
@@ -969,28 +674,38 @@
       </div>
     </div>
 
-    <!-- Gráfico melhorado -->
+    <!-- Gráfico -->
     <div class="chart-container" role="region" aria-label="Gráfico de Participação nas Vendas por Produto">
       <div class="chart-header">
         <h3 class="chart-title">📈 Participação nas Vendas por Produto</h3>
-        <div class="tooltip" data-tooltip="Top 8 produtos com maior participação nas vendas.">ℹ️</div>
+        <div class="tooltip" data-tooltip="Top produtos com maior participação nas vendas.">ℹ️</div>
       </div>
       <canvas id="salesChart" aria-label="Gráfico de participação nas vendas por produto" role="img" style="width:100%; max-height:400px;"></canvas>
     </div>
 
-    <!-- Seção de Produtos em grade -->
-    <section class="products-section" aria-label="Ranking de Produtos">
-      <div class="section-header">
-        <h2 class="section-title">🏆 Ranking de Produtos</h2>
+    <!-- Abas para Ranking e Estoque -->
+    <div class="tabs" role="tablist" aria-label="Seções do Dashboard">
+      <div class="tab active" id="tabRanking" role="tab" aria-selected="true" tabindex="0" aria-controls="rankingSection" onclick="showTab('rankingSection', this)">🏆 Ranking de Produtos</div>
+      <div class="tab" id="tabEstoque" role="tab" aria-selected="false" tabindex="-1" aria-controls="stockSection" onclick="showTab('stockSection', this)">📦 Estoque</div>
+    </div>
+
+    <!-- Ranking de Produtos -->
+    <section id="rankingSection" class="products-section" role="tabpanel" aria-labelledby="tabRanking">
+      <div id="productsGrid" class="products-grid" tabindex="0" aria-live="polite" aria-relevant="additions removals">
+        <!-- Espaço vazio para cards adicionados via modal -->
       </div>
-      <div id="productsGrid" class="products-grid" tabindex="0">
-        <!-- Cards de produtos serão inseridos via JS -->
+    </section>
+
+    <!-- Seção Estoque -->
+    <section id="stockSection" class="products-section" role="tabpanel" aria-labelledby="tabEstoque" hidden>
+      <div id="stockGrid" class="stock-grid" tabindex="0" aria-live="polite" aria-relevant="additions removals">
+        <!-- Listagem estoque -->
       </div>
     </section>
   </div>
 
-  <!-- Modal para Novo Produto -->
-  <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+  <!-- Modal Adicionar Produto -->
+  <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle" class="modal-title">➕ Novo Produto</h2>
@@ -999,36 +714,56 @@
       <form id="productForm">
         <div class="form-group">
           <label for="productSku">SKU</label>
-          <input type="text" id="productSku" class="form-input" required />
+          <input type="text" id="productSku" class="form-input" required aria-required="true" />
         </div>
         <div class="form-group">
           <label for="productName">Nome do Produto</label>
-          <input type="text" id="productName" class="form-input" required />
+          <input type="text" id="productName" class="form-input" required aria-required="true" />
         </div>
         <div class="form-group">
-          <label for="productSales">Vendas</label>
-          <input type="number" id="productSales" class="form-input" min="0" required />
+          <label for="productSales">Vendas (R$)</label>
+          <input type="number" id="productSales" class="form-input" min="0" required aria-required="true" />
         </div>
         <div class="form-group">
           <label for="productUnits">Unidades Vendidas</label>
-          <input type="number" id="productUnits" class="form-input" min="0" required />
+          <input type="number" id="productUnits" class="form-input" min="0" required aria-required="true" />
         </div>
         <div class="form-group">
           <label for="productStock">Estoque</label>
-          <input type="number" id="productStock" class="form-input" min="0" required />
+          <input type="number" id="productStock" class="form-input" min="0" required aria-required="true" />
         </div>
         <div class="form-group">
-          <label for="productImage">URL da Imagem</label>
-          <input type="url" id="productImage" class="form-input" />
+          <label for="productImage">URL da Imagem (opcional)</label>
+          <input type="url" id="productImage" class="form-input" placeholder="https://exemplo.com/imagem.jpg" />
         </div>
         <button type="submit" class="btn btn-primary">Salvar Produto</button>
       </form>
     </div>
   </div>
 
+  <!-- Modal Importar CSV -->
+  <div id="importModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle" tabindex="-1" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="importModalTitle" class="modal-title">📥 Importar Produtos CSV</h2>
+        <button class="close-btn" aria-label="Fechar" onclick="closeImportModal()">×</button>
+      </div>
+      <form id="importForm">
+        <div class="form-group">
+          <label for="csvInput">Cole os dados CSV aqui (SKU,Nome,Vendas,Unidades,Estoque,Imagem)</label>
+          <textarea id="csvInput" class="form-input" placeholder="PROD001,Produto 1,12000,100,50,https://exemplo.com/img1.jpg&#10;PROD002,Produto 2,9000,80,30," required aria-required="true"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Importar Produtos</button>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Controle de login simples (exemplo)
+    // --- Variáveis globais ---
+    let produtos = [];
+
+    // Login simples
     const loginForm = document.getElementById('loginForm');
     const loginScreen = document.getElementById('loginScreen');
     const mainDashboard = document.getElementById('mainDashboard');
@@ -1046,6 +781,7 @@
         mainDashboard.style.display = 'block';
         mainDashboard.setAttribute('aria-hidden', 'false');
         userAvatar.textContent = username.charAt(0).toUpperCase();
+        atualizarDashboard();
       } else {
         loginError.style.display = 'block';
       }
@@ -1058,27 +794,112 @@
       loginForm.reset();
       loginError.style.display = 'none';
       document.getElementById('username').focus();
+      produtos = [];
+      atualizarDashboard();
     }
 
-    // Modal básico para novo produto
+    // Modal de adicionar produto
+    const productModal = document.getElementById('productModal');
+    const productForm = document.getElementById('productForm');
+
     function openModal() {
-      document.getElementById('productModal').style.display = 'block';
-      document.getElementById('productModal').focus();
+      productModal.style.display = 'block';
+      productModal.setAttribute('aria-hidden', 'false');
+      productForm.reset();
+      document.getElementById('productSku').focus();
     }
     function closeModal() {
-      document.getElementById('productModal').style.display = 'none';
-      document.getElementById('productForm').reset();
+      productModal.style.display = 'none';
+      productModal.setAttribute('aria-hidden', 'true');
     }
 
-    // Inicialização do gráfico de barras
+    productForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const sku = document.getElementById('productSku').value.trim();
+      const nome = document.getElementById('productName').value.trim();
+      const vendas = parseFloat(document.getElementById('productSales').value);
+      const unidades = parseInt(document.getElementById('productUnits').value);
+      const estoque = parseInt(document.getElementById('productStock').value);
+      const imagem = document.getElementById('productImage').value.trim() || 'https://via.placeholder.com/100';
+
+      if(!sku || !nome || isNaN(vendas) || isNaN(unidades) || isNaN(estoque)) return;
+
+      produtos.push({ sku, nome, vendas, unidades, estoque, imagem });
+      closeModal();
+      atualizarDashboard();
+    });
+
+    // Modal Importar CSV
+    const importModal = document.getElementById('importModal');
+    const importForm = document.getElementById('importForm');
+    const csvInput = document.getElementById('csvInput');
+
+    function openImportModal() {
+      importModal.style.display = 'block';
+      importModal.setAttribute('aria-hidden', 'false');
+      importForm.reset();
+      csvInput.focus();
+    }
+    function closeImportModal() {
+      importModal.style.display = 'none';
+      importModal.setAttribute('aria-hidden', 'true');
+    }
+
+    importForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const csv = csvInput.value.trim();
+      if(!csv) return;
+
+      const linhas = csv.split('\n');
+      linhas.forEach(linha => {
+        const partes = linha.split(',');
+        if(partes.length >= 5) {
+          let [sku, nome, vendas, unidades, estoque, imagem] = partes;
+          vendas = parseFloat(vendas);
+          unidades = parseInt(unidades);
+          estoque = parseInt(estoque);
+          imagem = imagem ? imagem.trim() : 'https://via.placeholder.com/100';
+          if(sku && nome && !isNaN(vendas) && !isNaN(unidades) && !isNaN(estoque)) {
+            produtos.push({ sku: sku.trim(), nome: nome.trim(), vendas, unidades, estoque, imagem });
+          }
+        }
+      });
+
+      closeImportModal();
+      atualizarDashboard();
+    });
+
+    // Tabs
+    function showTab(id, tabElement) {
+      // Tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute('tabindex', '-1');
+      });
+      tabElement.classList.add('active');
+      tabElement.setAttribute('aria-selected', 'true');
+      tabElement.setAttribute('tabindex', '0');
+
+      // Sections
+      document.querySelectorAll('section[role="tabpanel"]').forEach(sec => {
+        if(sec.id === id) {
+          sec.hidden = false;
+        } else {
+          sec.hidden = true;
+        }
+      });
+    }
+
+    // Chart.js - Gráfico de barras
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [], // preencher com nomes dos produtos
+        labels: [],
         datasets: [{
           label: 'Vendas (R$)',
-          data: [], // preencher com valores de vendas
+          data: [],
           backgroundColor: 'rgba(102, 126, 234, 0.7)',
           borderColor: 'rgba(102, 126, 234, 1)',
           borderWidth: 1,
@@ -1091,101 +912,144 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
-                return 'R$ ' + value.toLocaleString('pt-BR');
-              }
+              callback: value => 'R$ ' + value.toLocaleString('pt-BR'),
             },
-            title: {
-              display: true,
-              text: 'Faturamento'
-            }
+            title: { display: true, text: 'Faturamento' }
           },
           x: {
-            title: {
-              display: true,
-              text: 'Produtos'
-            }
+            title: { display: true, text: 'Produtos' }
           }
         },
         plugins: {
-          legend: {
-            display: false
-          },
+          legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(context) {
-                let value = context.parsed.y;
-                return 'R$ ' + value.toLocaleString('pt-BR');
-              }
+              label: context => 'R$ ' + context.parsed.y.toLocaleString('pt-BR')
             }
           }
         }
       }
     });
 
-    // Exemplo básico de dados (pode substituir com dados reais)
-    const produtosExemplo = [
-      { sku: 'PROD001', nome: 'Produto 1', vendas: 12000, unidades: 100, estoque: 50, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD002', nome: 'Produto 2', vendas: 9000, unidades: 80, estoque: 30, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD003', nome: 'Produto 3', vendas: 7500, unidades: 65, estoque: 20, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD004', nome: 'Produto 4', vendas: 6000, unidades: 55, estoque: 15, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD005', nome: 'Produto 5', vendas: 5000, unidades: 45, estoque: 10, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD006', nome: 'Produto 6', vendas: 4000, unidades: 35, estoque: 5, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD007', nome: 'Produto 7', vendas: 3000, unidades: 25, estoque: 3, imagem: 'https://via.placeholder.com/100' },
-      { sku: 'PROD008', nome: 'Produto 8', vendas: 2000, unidades: 15, estoque: 1, imagem: 'https://via.placeholder.com/100' },
-    ];
+    // Atualizar Dashboard
+    function atualizarDashboard() {
+      // Estatísticas
+      const totalProducts = produtos.length;
+      const totalSales = produtos.reduce((acc, p) => acc + p.vendas, 0);
+      const totalUnits = produtos.reduce((acc, p) => acc + p.unidades, 0);
+      const totalStock = produtos.reduce((acc, p) => acc + p.estoque, 0);
 
-    // Função para popular o gráfico
-    function atualizarGrafico(produtos) {
+      document.getElementById('totalProducts').textContent = totalProducts;
+      document.getElementById('totalSales').textContent = 'R$ ' + totalSales.toLocaleString('pt-BR');
+      document.getElementById('totalUnits').textContent = totalUnits;
+      document.getElementById('totalStock').textContent = totalStock;
+
+      // Gráfico
       salesChart.data.labels = produtos.map(p => p.nome);
       salesChart.data.datasets[0].data = produtos.map(p => p.vendas);
       salesChart.update();
-    }
 
-    // Função para popular o grid de produtos
-    const productsGrid = document.getElementById('productsGrid');
-    function popularGrid(produtos) {
+      // Ranking produtos (grid)
+      const productsGrid = document.getElementById('productsGrid');
       productsGrid.innerHTML = '';
-      produtos.forEach((produto, index) => {
+
+      produtos.forEach((p, i) => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.setAttribute('tabindex', '0');
         card.innerHTML = `
-          <div class="ranking-badge ${index === 0 ? 'top-1' : index < 3 ? 'top-3' : ''}">${index + 1}</div>
-          <img src="${produto.imagem}" alt="Imagem do ${produto.nome}" class="product-image" />
+          <img src="${p.imagem}" alt="Imagem do ${p.nome}" class="product-image" />
           <div class="product-info">
-            <div class="product-sku">${produto.sku}</div>
-            <div class="product-name">${produto.nome}</div>
+            <div class="product-sku">${p.sku}</div>
+            <div class="product-name">${p.nome}</div>
             <div class="product-stats">
               <div class="stat-item">
-                <div class="stat-value">R$ ${produto.vendas.toLocaleString('pt-BR')}</div>
+                <div class="stat-value">R$ ${p.vendas.toLocaleString('pt-BR')}</div>
                 <div class="stat-text">Faturamento</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value">${produto.unidades}</div>
+                <div class="stat-value">${p.unidades}</div>
                 <div class="stat-text">Unidades Vendidas</div>
-              </div>
-            </div>
-            <div class="stock-section ${produto.estoque <= 5 ? 'low-stock' : ''}">
-              <div class="stock-title">${produto.estoque <= 5 ? 'Estoque Baixo' : 'Estoque Normal'}</div>
-              <div class="stock-grid">
-                <div class="stock-item ${produto.estoque <= 5 ? 'low-stock' : ''}">
-                  <div class="stock-location">Geral</div>
-                  <div class="stock-quantity">${produto.estoque}</div>
-                </div>
               </div>
             </div>
           </div>
         `;
         productsGrid.appendChild(card);
       });
+
+      // Estoque grid
+      const stockGrid = document.getElementById('stockGrid');
+      stockGrid.innerHTML = '';
+
+      produtos.forEach(p => {
+        const stockCard = document.createElement('div');
+        stockCard.className = 'stock-card';
+        const estoqueBaixo = p.estoque <= 5;
+        stockCard.innerHTML = `
+          <div class="stock-sku">${p.sku}</div>
+          <div class="stock-name">${p.nome}</div>
+          <div class="stock-quantity">${p.estoque}</div>
+          <div class="stock-status ${estoqueBaixo ? 'low-stock' : 'normal-stock'}">${estoqueBaixo ? 'Estoque Baixo' : 'Estoque Normal'}</div>
+        `;
+        stockGrid.appendChild(stockCard);
+      });
     }
 
-    // Inicialização
-    atualizarGrafico(produtosExemplo);
-    popularGrid(produtosExemplo);
+    // Filtros (básico)
+    const skuFilter = document.getElementById('skuFilter');
+    skuFilter.addEventListener('input', () => {
+      filtrarProdutos();
+    });
 
-    // Aqui você pode adicionar os filtros e interação para atualizar dashboard
+    function filtrarProdutos() {
+      const filtroSku = skuFilter.value.toLowerCase();
+      const produtosFiltrados = produtos.filter(p => p.sku.toLowerCase().includes(filtroSku));
+      atualizarDashboardFiltrado(produtosFiltrados);
+    }
+
+    function atualizarDashboardFiltrado(produtosFiltrados) {
+      // Atualiza só o ranking e estoque com produtos filtrados, mantém estatísticas e gráfico com todos para simplificar
+      const productsGrid = document.getElementById('productsGrid');
+      productsGrid.innerHTML = '';
+      produtosFiltrados.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.setAttribute('tabindex', '0');
+        card.innerHTML = `
+          <img src="${p.imagem}" alt="Imagem do ${p.nome}" class="product-image" />
+          <div class="product-info">
+            <div class="product-sku">${p.sku}</div>
+            <div class="product-name">${p.nome}</div>
+            <div class="product-stats">
+              <div class="stat-item">
+                <div class="stat-value">R$ ${p.vendas.toLocaleString('pt-BR')}</div>
+                <div class="stat-text">Faturamento</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${p.unidades}</div>
+                <div class="stat-text">Unidades Vendidas</div>
+              </div>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+
+      const stockGrid = document.getElementById('stockGrid');
+      stockGrid.innerHTML = '';
+      produtosFiltrados.forEach(p => {
+        const stockCard = document.createElement('div');
+        stockCard.className = 'stock-card';
+        const estoqueBaixo = p.estoque <= 5;
+        stockCard.innerHTML = `
+          <div class="stock-sku">${p.sku}</div>
+          <div class="stock-name">${p.nome}</div>
+          <div class="stock-quantity">${p.estoque}</div>
+          <div class="stock-status ${estoqueBaixo ? 'low-stock' : 'normal-stock'}">${estoqueBaixo ? 'Estoque Baixo' : 'Estoque Normal'}</div>
+        `;
+        stockGrid.appendChild(stockCard);
+      });
+    }
 
   </script>
 </body>
