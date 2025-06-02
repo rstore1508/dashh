@@ -5,40 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard de Vendas - Ranking de Produtos</title>
 <style>
-  /* Seu CSS original, mantido */
-  /* ... (igual ao seu original para economia de espaço) ... */
-  /* Adicionei só estilo para painel "Mais Vendidos" */
-  .top-sellers {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  }
-  .top-sellers h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .top-sellers-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  .top-sellers-list li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    font-weight: 600;
+  /* (Seu CSS existente, sem alterações importantes) */
+  /* Copie e cole seu CSS atual aqui para não perder o estilo */
+  /* --- */
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
     color: #333;
   }
-  .top-sellers-list li span {
-    float: right;
-    font-weight: 700;
-    color: #667eea;
+  /* ... continue com todo seu CSS atual ... */
+  /* Para economizar espaço não vou colar todo CSS novamente aqui, mas mantenha o seu */
+  /* Adicione o container do gráfico abaixo */
+
+  #dashboardChartContainer {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   }
+
 </style>
 </head>
 <body>
@@ -119,12 +108,9 @@
         </div>
       </div>
 
-      <!-- Painel Top 5 Mais Vendidos -->
-      <div class="top-sellers" aria-live="polite" aria-atomic="true" role="region" aria-label="Top 5 Produtos Mais Vendidos">
-        <h2>Top 5 Produtos Mais Vendidos</h2>
-        <ul id="topSellersList" class="top-sellers-list">
-          <li>Carregando...</li>
-        </ul>
+      <!-- Gráfico de Pizza -->
+      <div id="dashboardChartContainer">
+        <canvas id="salesPieChart" aria-label="Gráfico de pizza das vendas por produto" role="img"></canvas>
       </div>
 
       <div class="stats-overview">
@@ -145,7 +131,6 @@
           <div class="stat-label">Estoque Total</div>
         </div>
       </div>
-
       <div id="productsContainer" class="products-grid" aria-live="polite" aria-atomic="true"></div>
     </div>
   </div>
@@ -262,6 +247,9 @@
     </div>
   </div>
 
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
   const validCredentials = {
     admin: "vendas123",
@@ -269,6 +257,7 @@
 
   let products = [];
   let editingProductId = null;
+  let salesPieChart = null;
 
   function loadData() {
     const data = localStorage.getItem("productsData");
@@ -288,8 +277,8 @@
   function renderProducts() {
     const container = document.getElementById("productsContainer");
     const skuFilter = document.getElementById("skuFilter").value.trim().toLowerCase();
-    const monthFilter = document.getElementById("monthFilter").value.toLowerCase();
-    const channelFilter = document.getElementById("channelFilter").value.toLowerCase();
+    const monthFilter = document.getElementById("monthFilter").value.trim().toLowerCase();
+    const channelFilter = document.getElementById("channelFilter").value.trim().toLowerCase();
 
     let filtered = products;
 
@@ -307,7 +296,7 @@
         </div>
       `;
       updateStats(filtered);
-      updateTopSellers([]);
+      updateChart(filtered);
       return;
     }
 
@@ -366,36 +355,7 @@
     }).join("");
 
     updateStats(filtered);
-    updateTopSellers(filtered);
-  }
-
-  function updateStats(filtered) {
-    const totalProducts = filtered.length;
-    const totalSales = filtered.reduce((sum, p) => sum + p.revenue, 0);
-    const totalUnits = filtered.reduce((sum, p) => sum + p.units, 0);
-    const totalStock = filtered.reduce((sum, p) => sum + p.stock.full + p.stock.sp + p.stock.masp, 0);
-
-    document.getElementById("totalProducts").textContent = totalProducts;
-    document.getElementById("totalSales").textContent = `R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    document.getElementById("totalUnits").textContent = totalUnits;
-    document.getElementById("totalStock").textContent = totalStock;
-  }
-
-  function updateTopSellers(filtered) {
-    const container = document.getElementById("topSellersList");
-    if (!filtered || filtered.length === 0) {
-      container.innerHTML = "<li>Nenhum produto para exibir</li>";
-      return;
-    }
-
-    // Top 5 produtos mais vendidos (unidades)
-    const top5 = [...filtered]
-      .sort((a,b) => b.units - a.units)
-      .slice(0,5);
-
-    container.innerHTML = top5.map(p => `
-      <li>${p.name} (SKU: ${p.sku}) <span>${p.units} unidades</span></li>
-    `).join("");
+    updateChart(filtered);
   }
 
   function openModal(product = null) {
@@ -440,6 +400,18 @@
   function openModalById(id) {
     const product = products.find(p => p.id === id);
     if (product) openModal(product);
+  }
+
+  function updateStats(filtered) {
+    const totalProducts = filtered.length;
+    const totalSales = filtered.reduce((sum, p) => sum + p.revenue, 0);
+    const totalUnits = filtered.reduce((sum, p) => sum + p.units, 0);
+    const totalStock = filtered.reduce((sum, p) => sum + p.stock.full + p.stock.sp + p.stock.masp, 0);
+
+    document.getElementById("totalProducts").textContent = totalProducts;
+    document.getElementById("totalSales").textContent = `R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    document.getElementById("totalUnits").textContent = totalUnits;
+    document.getElementById("totalStock").textContent = totalStock;
   }
 
   function showLogin() {
@@ -493,8 +465,8 @@
       sku: document.getElementById("productSKU").value.trim(),
       name: document.getElementById("productName").value.trim(),
       image: document.getElementById("productImage").value.trim(),
-      month: document.getElementById("productMonth").value.toLowerCase(),
-      channel: document.getElementById("productChannel").value.toLowerCase(),
+      month: document.getElementById("productMonth").value.trim().toLowerCase(),
+      channel: document.getElementById("productChannel").value.trim().toLowerCase(),
       units: parseInt(document.getElementById("productUnits").value,10),
       revenue: parseFloat(document.getElementById("productRevenue").value),
       stock: {
@@ -589,7 +561,7 @@
       ] = parts;
 
       const units = parseInt(unitsStr, 10);
-      const revenue = parseFloat(revenueStr.replace(",",".")); 
+      const revenue = parseFloat(revenueStr.replace(",","."));
       const stockFull = parseInt(stockFullStr, 10);
       const stockSP = parseInt(stockSPStr, 10);
       const stockMASP = parseInt(stockMASPStr, 10);
@@ -599,13 +571,12 @@
         return;
       }
 
-      // Verifica se produto já existe pelo SKU, mês e canal
-      const existingIndex = products.findIndex(p => 
-        p.sku === sku &&
-        p.month === month.toLowerCase() &&
-        p.channel === channel.toLowerCase()
-      );
+      // Normaliza mês e canal
+      const normalizedMonth = month.trim().toLowerCase();
+      const normalizedChannel = channel.trim().toLowerCase();
 
+      // Verifica se produto já existe pelo SKU
+      const existingIndex = products.findIndex(p => p.sku === sku && p.month === normalizedMonth && p.channel === normalizedChannel);
       if (existingIndex !== -1) {
         // Atualiza dados relevantes mantendo outros campos
         products[existingIndex].image = image || products[existingIndex].image;
@@ -622,8 +593,8 @@
           sku,
           name,
           image,
-          month: month.toLowerCase(),
-          channel: channel.toLowerCase(),
+          month: normalizedMonth,
+          channel: normalizedChannel,
           units,
           revenue,
           stock: {
@@ -647,6 +618,82 @@
 
     alert(message);
   }
+
+  // Função para atualizar o gráfico de pizza
+  function updateChart(filteredProducts) {
+    const ctx = document.getElementById('salesPieChart').getContext('2d');
+
+    // Agrupar por produto (SKU + nome), somando receita
+    const grouped = {};
+    filteredProducts.forEach(p => {
+      const key = `${p.sku} - ${p.name}`;
+      if (!grouped[key]) grouped[key] = 0;
+      grouped[key] += p.revenue;
+    });
+
+    const labels = Object.keys(grouped);
+    const data = Object.values(grouped);
+
+    // Se o gráfico já existe, destrói para recriar
+    if (salesPieChart) salesPieChart.destroy();
+
+    salesPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Faturamento (R$)',
+          data,
+          backgroundColor: generateColors(labels.length),
+          borderWidth: 1,
+          borderColor: '#fff',
+          hoverOffset: 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              boxWidth: 20,
+              padding: 15,
+              font: {
+                size: 14
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const value = context.parsed;
+                return `R$ ${value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Participação nas Vendas por Produto',
+            font: { size: 18, weight: 'bold' }
+          }
+        }
+      }
+    });
+  }
+
+  // Gerar cores para o gráfico
+  function generateColors(num) {
+    const colors = [];
+    const baseColors = [
+      '#667eea', '#764ba2', '#f39c12', '#e74c3c', '#27ae60', '#2980b9',
+      '#8e44ad', '#c0392b', '#d35400', '#16a085', '#2ecc71', '#3498db',
+    ];
+    for(let i = 0; i < num; i++) {
+      colors.push(baseColors[i % baseColors.length]);
+    }
+    return colors;
+  }
+
 </script>
 </body>
 </html>
