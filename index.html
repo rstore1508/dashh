@@ -956,43 +956,57 @@
     document.getElementById("bulkImportTextarea").value = "";
   }
 
-  function processBulkImport() {
-    const textarea = document.getElementById("bulkImportTextarea");
-    const text = textarea.value.trim();
+function processBulkImport() {
+  const textarea = document.getElementById("bulkImportTextarea");
+  const text = textarea.value.trim();
 
-    if (!text) {
-      alert("Por favor, cole os dados para importar.");
+  if (!text) {
+    alert("Por favor, cole os dados para importar.");
+    return;
+  }
+
+  const lines = text.split("\n");
+  let addedCount = 0;
+  let updatedCount = 0;
+  let errors = [];
+
+  lines.forEach((line, index) => {
+    const parts = line.split(",").map(p => p.trim());
+
+    if (parts.length < 10) {
+      errors.push(`Linha ${index + 1}: Dados insuficientes.`);
       return;
     }
 
-    const lines = text.split("\n");
-    let addedCount = 0;
-    let errors = [];
+    const [
+      sku, name, image, month, channel,
+      unitsStr, revenueStr, stockFullStr, stockSPStr, stockMASPStr
+    ] = parts;
 
-    lines.forEach((line, index) => {
-      const parts = line.split(",").map(p => p.trim());
+    const units = parseInt(unitsStr, 10);
+    const revenue = parseFloat(revenueStr.replace(",","."));
+    const stockFull = parseInt(stockFullStr, 10);
+    const stockSP = parseInt(stockSPStr, 10);
+    const stockMASP = parseInt(stockMASPStr, 10);
 
-      if (parts.length < 10) {
-        errors.push(`Linha ${index + 1}: Dados insuficientes.`);
-        return;
-      }
+    if (!sku || !name || !month || !channel || isNaN(units) || isNaN(revenue) || isNaN(stockFull) || isNaN(stockSP) || isNaN(stockMASP)) {
+      errors.push(`Linha ${index + 1}: Dados inválidos.`);
+      return;
+    }
 
-      const [
-        sku, name, image, month, channel,
-        unitsStr, revenueStr, stockFullStr, stockSPStr, stockMASPStr
-      ] = parts;
-
-      const units = parseInt(unitsStr, 10);
-      const revenue = parseFloat(revenueStr.replace(",","."));
-      const stockFull = parseInt(stockFullStr, 10);
-      const stockSP = parseInt(stockSPStr, 10);
-      const stockMASP = parseInt(stockMASPStr, 10);
-
-      if (!sku || !name || !month || !channel || isNaN(units) || isNaN(revenue) || isNaN(stockFull) || isNaN(stockSP) || isNaN(stockMASP)) {
-        errors.push(`Linha ${index + 1}: Dados inválidos.`);
-        return;
-      }
-
+    // Verifica se produto já existe pelo SKU
+    const existingIndex = products.findIndex(p => p.sku === sku);
+    if (existingIndex !== -1) {
+      // Atualiza dados relevantes mantendo outros campos
+      products[existingIndex].image = image || products[existingIndex].image;
+      products[existingIndex].stock.full = stockFull;
+      products[existingIndex].stock.sp = stockSP;
+      products[existingIndex].stock.masp = stockMASP;
+      products[existingIndex].units = units;
+      products[existingIndex].revenue = revenue;
+      updatedCount++;
+    } else {
+      // Produto novo
       products.push({
         id: Date.now() + index + Math.floor(Math.random() * 1000),
         sku,
@@ -1009,18 +1023,20 @@
         }
       });
       addedCount++;
-    });
-
-    saveData();
-    renderProducts();
-    closeBulkImportModal();
-
-    let message = `Importação concluída: ${addedCount} produto(s) adicionados.`;
-    if (errors.length) {
-      message += `\n\nAlguns erros foram encontrados:\n- ${errors.join("\n- ")}`;
     }
+  });
 
-    alert(message);
+  saveData();
+  renderProducts();
+  closeBulkImportModal();
+
+  let message = `Importação concluída: ${addedCount} produto(s) adicionados, ${updatedCount} produto(s) atualizados.`;
+  if (errors.length) {
+    message += `\n\nAlguns erros foram encontrados:\n- ${errors.join("\n- ")}`;
+  }
+
+  alert(message);
+
   }
 </script>
 </body>
