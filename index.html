@@ -400,6 +400,8 @@
     overflow: hidden;
     cursor: pointer;
     border: 2px solid transparent;
+    display: flex;
+    align-items: center;
   }
   
   .product-card:hover {
@@ -833,11 +835,11 @@
 </head>
 <body>
   <!-- Tela de Login -->
-  <div id="loginScreen" class="login-screen">
+  <div id="loginScreen" class="login-screen" aria-modal="true" role="dialog" aria-labelledby="loginTitle">
     <div class="login-container">
-      <h1 class="login-title">🚀 Dashboard Vendas</h1>
+      <h1 id="loginTitle" class="login-title">🚀 Dashboard Vendas</h1>
       <p style="margin-bottom: 24px; color: #666;">Acesse sua central de controle</p>
-      <form id="loginForm" class="login-form" autocomplete="off">
+      <form id="loginForm" class="login-form" autocomplete="off" aria-describedby="loginError">
         <input
           type="text"
           id="username"
@@ -846,6 +848,7 @@
           required
           autocomplete="username"
           autofocus
+          aria-label="Usuário"
         />
         <input
           type="password"
@@ -854,11 +857,12 @@
           placeholder="🔒 Senha"
           required
           autocomplete="current-password"
+          aria-label="Senha"
         />
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary" aria-label="Acessar Dashboard">
           <span>🔓</span> Acessar Dashboard
         </button>
-        <div id="loginError" class="login-error">❌ Usuário ou senha incorretos!</div>
+        <div id="loginError" class="login-error" role="alert" aria-live="assertive">❌ Usuário ou senha incorretos!</div>
       </form>
       <div style="margin-top: 24px; font-size: 12px; color: #999;">
         <strong>Credenciais de teste:</strong><br>
@@ -874,12 +878,12 @@
       <div class="header-top">
         <h1>📊 Dashboard de Vendas</h1>
         <div class="user-info">
-          <div class="user-avatar">A</div>
+          <div class="user-avatar" aria-label="Avatar do usuário">A</div>
           <div>
             <div style="font-weight: 600;">Admin</div>
             <div style="font-size: 12px; color: #666;">Administrador</div>
           </div>
-          <button class="btn btn-danger btn-sm" onclick="logout()">
+          <button class="btn btn-danger btn-sm" onclick="logout()" aria-label="Sair do Dashboard">
             <span>🚪</span> Sair
           </button>
         </div>
@@ -888,11 +892,11 @@
       <div class="controls">
         <div class="filter-group">
           <label for="skuFilter">🔍 Buscar por SKU:</label>
-          <input type="text" id="skuFilter" class="form-input" placeholder="Digite o código SKU..." />
+          <input type="text" id="skuFilter" class="form-input" placeholder="Digite o código SKU..." aria-label="Filtro de SKU" />
         </div>
         <div class="filter-group">
           <label for="monthFilter">📅 Filtrar por Mês:</label>
-          <select id="monthFilter" class="form-select">
+          <select id="monthFilter" class="form-select" aria-label="Filtro de Mês">
             <option value="">Todos os Meses</option>
             <option value="janeiro">Janeiro</option>
             <option value="fevereiro">Fevereiro</option>
@@ -910,7 +914,7 @@
         </div>
         <div class="filter-group">
           <label for="channelFilter">🏪 Filtrar por Canal:</label>
-          <select id="channelFilter" class="form-select">
+          <select id="channelFilter" class="form-select" aria-label="Filtro de Canal">
             <option value="">Todos os Canais</option>
             <option value="shecom ml">Shecom ML</option>
             <option value="tuguir ml">Tuguir ML</option>
@@ -926,10 +930,10 @@
         <div class="filter-group">
           <label>&nbsp;</label>
           <div class="quick-actions">
-            <button class="btn btn-primary" onclick="openModal()">
+            <button class="btn btn-primary" onclick="openModal()" aria-label="Adicionar Novo Produto">
               <span>➕</span> Novo Produto
             </button>
-            <button class="btn btn-success" onclick="openBulkImportModal()">
+            <button class="btn btn-success" onclick="openBulkImportModal && openBulkImportModal()" aria-label="Importar Produtos">
               <span>📥</span> Importar
             </button>
           </div>
@@ -939,25 +943,25 @@
 
     <!-- Cards de estatísticas melhorados -->
     <div class="stats-overview">
-      <div class="stat-card">
+      <div class="stat-card" tabindex="0" aria-label="Total de Produtos">
         <div class="stat-icon">📦</div>
         <div class="stat-number" id="totalProducts">0</div>
         <div class="stat-label">Total de Produtos</div>
         <div class="stat-trend trend-up" id="productstrend">+0% vs mês anterior</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" tabindex="0" aria-label="Faturamento Total">
         <div class="stat-icon">💰</div>
         <div class="stat-number" id="totalSales">R$ 0,00</div>
         <div class="stat-label">Faturamento Total</div>
         <div class="stat-trend trend-up" id="salesTrend">+0% vs mês anterior</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" tabindex="0" aria-label="Unidades Vendidas">
         <div class="stat-icon">📈</div>
         <div class="stat-number" id="totalUnits">0</div>
         <div class="stat-label">Unidades Vendidas</div>
         <div class="stat-trend trend-up" id="unitsTrend">+0% vs mês anterior</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" tabindex="0" aria-label="Estoque Disponível">
         <div class="stat-icon">📊</div>
         <div class="stat-number" id="totalStock">0</div>
         <div class="stat-label">Estoque Disponível</div>
@@ -966,27 +970,26 @@
     </div>
 
     <!-- Gráfico melhorado -->
-    <div class="chart-container">
+    <div class="chart-container" role="region" aria-label="Gráfico de Participação nas Vendas por Produto">
       <div class="chart-header">
         <h3 class="chart-title">📈 Participação nas Vendas por Produto</h3>
-        <div class="tooltip" data-tooltip="Top 8 produtos
-                  <div class="tooltip" data-tooltip="Top 8 produtos com maior participação nas vendas.">ℹ️</div>
+        <div class="tooltip" data-tooltip="Top 8 produtos com maior participação nas vendas.">ℹ️</div>
       </div>
       <canvas id="salesChart" aria-label="Gráfico de participação nas vendas por produto" role="img" style="width:100%; max-height:400px;"></canvas>
     </div>
 
     <!-- Seção de Produtos em grade -->
-    <section class="products-section">
+    <section class="products-section" aria-label="Ranking de Produtos">
       <div class="section-header">
         <h2 class="section-title">🏆 Ranking de Produtos</h2>
       </div>
-      <div id="productsGrid" class="products-grid">
+      <div id="productsGrid" class="products-grid" tabindex="0">
         <!-- Cards de produtos serão inseridos via JS -->
       </div>
     </section>
   </div>
 
-  <!-- Modal para Novo Produto (exemplo básico) -->
+  <!-- Modal para Novo Produto -->
   <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
     <div class="modal-content">
       <div class="modal-header">
@@ -1025,50 +1028,165 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Exemplo básico para abrir/fechar modal
+    // Controle de login simples (exemplo)
+    const loginForm = document.getElementById('loginForm');
+    const loginScreen = document.getElementById('loginScreen');
+    const mainDashboard = document.getElementById('mainDashboard');
+    const loginError = document.getElementById('loginError');
+    const userAvatar = document.querySelector('.user-avatar');
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if(username === 'admin' && password === 'vendas123') {
+        loginError.style.display = 'none';
+        loginScreen.style.display = 'none';
+        mainDashboard.style.display = 'block';
+        mainDashboard.setAttribute('aria-hidden', 'false');
+        userAvatar.textContent = username.charAt(0).toUpperCase();
+      } else {
+        loginError.style.display = 'block';
+      }
+    });
+
+    function logout() {
+      mainDashboard.style.display = 'none';
+      loginScreen.style.display = 'flex';
+      mainDashboard.setAttribute('aria-hidden', 'true');
+      loginForm.reset();
+      loginError.style.display = 'none';
+      document.getElementById('username').focus();
+    }
+
+    // Modal básico para novo produto
     function openModal() {
       document.getElementById('productModal').style.display = 'block';
+      document.getElementById('productModal').focus();
     }
     function closeModal() {
       document.getElementById('productModal').style.display = 'none';
+      document.getElementById('productForm').reset();
     }
 
-    // Exemplo de inicialização do Chart.js no canvas salesChart
+    // Inicialização do gráfico de barras
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'bar',
       data: {
-        labels: [], // preencher dinamicamente com nomes dos produtos
+        labels: [], // preencher com nomes dos produtos
         datasets: [{
-          label: 'Participação nas Vendas',
-          data: [], // preencher dinamicamente com valores de vendas
-          backgroundColor: [
-            '#667eea',
-            '#764ba2',
-            '#27ae60',
-            '#f39c12',
-            '#e74c3c',
-            '#3498db',
-            '#6c757d',
-            '#ff6b6b'
-          ],
-          borderWidth: 1
+          label: 'Vendas (R$)',
+          data: [], // preencher com valores de vendas
+          backgroundColor: 'rgba(102, 126, 234, 0.7)',
+          borderColor: 'rgba(102, 126, 234, 1)',
+          borderWidth: 1,
+          borderRadius: 6
         }]
       },
       options: {
         responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return 'R$ ' + value.toLocaleString('pt-BR');
+              }
+            },
+            title: {
+              display: true,
+              text: 'Faturamento'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Produtos'
+            }
+          }
+        },
         plugins: {
           legend: {
-            position: 'right',
+            display: false
           },
           tooltip: {
-            enabled: true,
+            callbacks: {
+              label: function(context) {
+                let value = context.parsed.y;
+                return 'R$ ' + value.toLocaleString('pt-BR');
+              }
+            }
           }
         }
       }
     });
 
-    // Você pode criar funções JS para atualizar esse gráfico e popular o grid de produtos conforme seus dados.
+    // Exemplo básico de dados (pode substituir com dados reais)
+    const produtosExemplo = [
+      { sku: 'PROD001', nome: 'Produto 1', vendas: 12000, unidades: 100, estoque: 50, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD002', nome: 'Produto 2', vendas: 9000, unidades: 80, estoque: 30, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD003', nome: 'Produto 3', vendas: 7500, unidades: 65, estoque: 20, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD004', nome: 'Produto 4', vendas: 6000, unidades: 55, estoque: 15, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD005', nome: 'Produto 5', vendas: 5000, unidades: 45, estoque: 10, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD006', nome: 'Produto 6', vendas: 4000, unidades: 35, estoque: 5, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD007', nome: 'Produto 7', vendas: 3000, unidades: 25, estoque: 3, imagem: 'https://via.placeholder.com/100' },
+      { sku: 'PROD008', nome: 'Produto 8', vendas: 2000, unidades: 15, estoque: 1, imagem: 'https://via.placeholder.com/100' },
+    ];
+
+    // Função para popular o gráfico
+    function atualizarGrafico(produtos) {
+      salesChart.data.labels = produtos.map(p => p.nome);
+      salesChart.data.datasets[0].data = produtos.map(p => p.vendas);
+      salesChart.update();
+    }
+
+    // Função para popular o grid de produtos
+    const productsGrid = document.getElementById('productsGrid');
+    function popularGrid(produtos) {
+      productsGrid.innerHTML = '';
+      produtos.forEach((produto, index) => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.setAttribute('tabindex', '0');
+        card.innerHTML = `
+          <div class="ranking-badge ${index === 0 ? 'top-1' : index < 3 ? 'top-3' : ''}">${index + 1}</div>
+          <img src="${produto.imagem}" alt="Imagem do ${produto.nome}" class="product-image" />
+          <div class="product-info">
+            <div class="product-sku">${produto.sku}</div>
+            <div class="product-name">${produto.nome}</div>
+            <div class="product-stats">
+              <div class="stat-item">
+                <div class="stat-value">R$ ${produto.vendas.toLocaleString('pt-BR')}</div>
+                <div class="stat-text">Faturamento</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${produto.unidades}</div>
+                <div class="stat-text">Unidades Vendidas</div>
+              </div>
+            </div>
+            <div class="stock-section ${produto.estoque <= 5 ? 'low-stock' : ''}">
+              <div class="stock-title">${produto.estoque <= 5 ? 'Estoque Baixo' : 'Estoque Normal'}</div>
+              <div class="stock-grid">
+                <div class="stock-item ${produto.estoque <= 5 ? 'low-stock' : ''}">
+                  <div class="stock-location">Geral</div>
+                  <div class="stock-quantity">${produto.estoque}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+    }
+
+    // Inicialização
+    atualizarGrafico(produtosExemplo);
+    popularGrid(produtosExemplo);
+
+    // Aqui você pode adicionar os filtros e interação para atualizar dashboard
+
   </script>
 </body>
 </html>
