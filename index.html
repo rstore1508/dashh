@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard de Vendas - Ranking e Estoque</title>
 <style>
-  /* --- Reuso dos estilos do seu código, com pequenas adaptações --- */
-
   /* Reset básico */
   * {
     margin: 0;
@@ -36,50 +34,69 @@
     color: var(--dark);
     line-height: 1.6;
   }
-  
-  .btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  }
-  
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-  }
-  
-  .btn-primary {
+
+  /* Login Screen */
+  .login-screen {
+    position: fixed;
+    inset: 0;
     background: var(--gradient);
-    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
   }
   
-  .btn-success {
-    background: var(--success);
-    color: white;
+  .login-container {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 48px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.3);
   }
   
-  .btn-danger {
-    background: var(--danger);
-    color: white;
+  .login-title {
+    font-size: 28px;
+    font-weight: 800;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 32px;
   }
   
-  .btn-secondary {
-    background: #6c757d;
-    color: white;
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   
-  .btn-sm {
-    padding: 8px 16px;
-    font-size: 12px;
+  .form-input {
+    padding: 16px 20px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.8);
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+    background: white;
+  }
+  
+  .login-error {
+    color: var(--danger);
+    margin-top: 12px;
+    display: none;
+    font-weight: 500;
+    padding: 12px;
+    background: rgba(231,76,60,0.1);
+    border-radius: 8px;
   }
 
   /* Dashboard Principal */
@@ -360,15 +377,21 @@
     font-size: 18px;
     font-weight: 700;
     color: var(--dark);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     line-height: 1.3;
+  }
+
+  .product-channel {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--info);
+    margin-bottom: 12px;
   }
 
   .product-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin: 16px 0;
   }
 
   .stat-item {
@@ -401,19 +424,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: default;
   }
 
   .stock-sku {
     font-weight: 700;
     font-size: 14px;
     color: var(--dark);
-    width: 20%;
+    width: 15%;
   }
   .stock-name {
     font-weight: 600;
     font-size: 16px;
     color: var(--primary);
-    width: 50%;
+    width: 35%;
+  }
+  .stock-channel {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--info);
+    width: 20%;
   }
   .stock-quantity {
     font-weight: 800;
@@ -530,12 +560,11 @@
       align-items: flex-start;
       gap: 8px;
     }
-    .stock-sku, .stock-name, .stock-quantity, .stock-status {
+    .stock-sku, .stock-name, .stock-channel, .stock-quantity, .stock-status {
       width: 100%;
       text-align: left;
     }
   }
-
 </style>
 </head>
 <body>
@@ -600,36 +629,18 @@
           <input type="text" id="skuFilter" class="form-input" placeholder="Digite o código SKU..." aria-label="Filtro de SKU" />
         </div>
         <div class="filter-group">
-          <label for="monthFilter">📅 Filtrar por Mês:</label>
-          <select id="monthFilter" class="form-select" aria-label="Filtro de Mês">
-            <option value="">Todos os Meses</option>
-            <option value="janeiro">Janeiro</option>
-            <option value="fevereiro">Fevereiro</option>
-            <option value="março">Março</option>
-            <option value="abril">Abril</option>
-            <option value="maio">Maio</option>
-            <option value="junho">Junho</option>
-            <option value="julho">Julho</option>
-            <option value="agosto">Agosto</option>
-            <option value="setembro">Setembro</option>
-            <option value="outubro">Outubro</option>
-            <option value="novembro">Novembro</option>
-            <option value="dezembro">Dezembro</option>
-          </select>
-        </div>
-        <div class="filter-group">
           <label for="channelFilter">🏪 Filtrar por Canal:</label>
           <select id="channelFilter" class="form-select" aria-label="Filtro de Canal">
             <option value="">Todos os Canais</option>
-            <option value="shecom ml">Shecom ML</option>
-            <option value="tuguir ml">Tuguir ML</option>
-            <option value="romplac">Romplac</option>
-            <option value="dafiti">Dafiti</option>
-            <option value="shopee">Shopee</option>
-            <option value="magazine luiza">Magazine Luiza</option>
-            <option value="relogiostore">RelogioStore</option>
-            <option value="shop do relogio">Shop do Relogio</option>
-            <option value="netshoes">Netshoes</option>
+            <option value="Shecom ML">Shecom ML</option>
+            <option value="Tuguir ML">Tuguir ML</option>
+            <option value="Romplac">Romplac</option>
+            <option value="Dafiti">Dafiti</option>
+            <option value="Shopee">Shopee</option>
+            <option value="Magazine Luiza">Magazine Luiza</option>
+            <option value="RelogioStore">RelogioStore</option>
+            <option value="Shop do Relogio">Shop do Relogio</option>
+            <option value="Netshoes">Netshoes</option>
           </select>
         </div>
         <div class="filter-group">
@@ -638,7 +649,7 @@
             <button class="btn btn-primary" onclick="openModal()" aria-label="Adicionar Novo Produto">
               <span>➕</span> Novo Produto
             </button>
-            <button class="btn btn-success" onclick="openImportModal()" aria-label="Importar Produtos">
+            <button class="btn btn-success" onclick="openImportModal()" aria-label="Importar Produtos CSV">
               <span>📥</span> Importar CSV
             </button>
           </div>
@@ -733,6 +744,21 @@
           <input type="number" id="productStock" class="form-input" min="0" required aria-required="true" />
         </div>
         <div class="form-group">
+          <label for="productChannel">Canal de Venda</label>
+          <select id="productChannel" class="form-select" required aria-required="true">
+            <option value="" disabled selected>Selecione o canal</option>
+            <option value="Shecom ML">Shecom ML</option>
+            <option value="Tuguir ML">Tuguir ML</option>
+            <option value="Romplac">Romplac</option>
+            <option value="Dafiti">Dafiti</option>
+            <option value="Shopee">Shopee</option>
+            <option value="Magazine Luiza">Magazine Luiza</option>
+            <option value="RelogioStore">RelogioStore</option>
+            <option value="Shop do Relogio">Shop do Relogio</option>
+            <option value="Netshoes">Netshoes</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="productImage">URL da Imagem (opcional)</label>
           <input type="url" id="productImage" class="form-input" placeholder="https://exemplo.com/imagem.jpg" />
         </div>
@@ -750,8 +776,8 @@
       </div>
       <form id="importForm">
         <div class="form-group">
-          <label for="csvInput">Cole os dados CSV aqui (SKU,Nome,Vendas,Unidades,Estoque,Imagem)</label>
-          <textarea id="csvInput" class="form-input" placeholder="PROD001,Produto 1,12000,100,50,https://exemplo.com/img1.jpg&#10;PROD002,Produto 2,9000,80,30," required aria-required="true"></textarea>
+          <label for="csvInput">Cole os dados CSV aqui (SKU,Nome,Vendas,Unidades,Estoque,Canal,Imagem)</label>
+          <textarea id="csvInput" class="form-input" placeholder="PROD001,Produto 1,12000,100,50,Shopee,https://exemplo.com/img1.jpg&#10;PROD002,Produto 2,9000,80,30,Shopee," required aria-required="true"></textarea>
         </div>
         <button type="submit" class="btn btn-success">Importar Produtos</button>
       </form>
@@ -760,15 +786,17 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // --- Variáveis globais ---
     let produtos = [];
+    let produtoEditandoIndex = null;
 
-    // Login simples
+    // Login
     const loginForm = document.getElementById('loginForm');
     const loginScreen = document.getElementById('loginScreen');
     const mainDashboard = document.getElementById('mainDashboard');
     const loginError = document.getElementById('loginError');
     const userAvatar = document.querySelector('.user-avatar');
+    const skuFilter = document.getElementById('skuFilter');
+    const channelFilter = document.getElementById('channelFilter');
 
     loginForm.addEventListener('submit', e => {
       e.preventDefault();
@@ -798,14 +826,16 @@
       atualizarDashboard();
     }
 
-    // Modal de adicionar produto
+    // Modal produtos
     const productModal = document.getElementById('productModal');
     const productForm = document.getElementById('productForm');
 
     function openModal() {
+      produtoEditandoIndex = null;
+      productForm.reset();
+      document.getElementById('modalTitle').textContent = '➕ Novo Produto';
       productModal.style.display = 'block';
       productModal.setAttribute('aria-hidden', 'false');
-      productForm.reset();
       document.getElementById('productSku').focus();
     }
     function closeModal() {
@@ -820,16 +850,23 @@
       const vendas = parseFloat(document.getElementById('productSales').value);
       const unidades = parseInt(document.getElementById('productUnits').value);
       const estoque = parseInt(document.getElementById('productStock').value);
+      const canal = document.getElementById('productChannel').value;
       const imagem = document.getElementById('productImage').value.trim() || 'https://via.placeholder.com/100';
 
-      if(!sku || !nome || isNaN(vendas) || isNaN(unidades) || isNaN(estoque)) return;
+      if(!sku || !nome || isNaN(vendas) || isNaN(unidades) || isNaN(estoque) || !canal) return;
 
-      produtos.push({ sku, nome, vendas, unidades, estoque, imagem });
+      if(produtoEditandoIndex !== null) {
+        // Editar produto
+        produtos[produtoEditandoIndex] = { sku, nome, vendas, unidades, estoque, canal, imagem };
+      } else {
+        // Adicionar produto novo
+        produtos.push({ sku, nome, vendas, unidades, estoque, canal, imagem });
+      }
       closeModal();
-      atualizarDashboard();
+      aplicarFiltros();
     });
 
-    // Modal Importar CSV
+    // Modal importar CSV
     const importModal = document.getElementById('importModal');
     const importForm = document.getElementById('importForm');
     const csvInput = document.getElementById('csvInput');
@@ -853,25 +890,25 @@
       const linhas = csv.split('\n');
       linhas.forEach(linha => {
         const partes = linha.split(',');
-        if(partes.length >= 5) {
-          let [sku, nome, vendas, unidades, estoque, imagem] = partes;
+        if(partes.length >= 6) {
+          let [sku, nome, vendas, unidades, estoque, canal, imagem] = partes;
           vendas = parseFloat(vendas);
           unidades = parseInt(unidades);
           estoque = parseInt(estoque);
+          canal = canal ? canal.trim() : '';
           imagem = imagem ? imagem.trim() : 'https://via.placeholder.com/100';
-          if(sku && nome && !isNaN(vendas) && !isNaN(unidades) && !isNaN(estoque)) {
-            produtos.push({ sku: sku.trim(), nome: nome.trim(), vendas, unidades, estoque, imagem });
+          if(sku && nome && !isNaN(vendas) && !isNaN(unidades) && !isNaN(estoque) && canal) {
+            produtos.push({ sku: sku.trim(), nome: nome.trim(), vendas, unidades, estoque, canal, imagem });
           }
         }
       });
 
       closeImportModal();
-      atualizarDashboard();
+      aplicarFiltros();
     });
 
     // Tabs
     function showTab(id, tabElement) {
-      // Tabs
       document.querySelectorAll('.tab').forEach(tab => {
         tab.classList.remove('active');
         tab.setAttribute('aria-selected', 'false');
@@ -881,17 +918,12 @@
       tabElement.setAttribute('aria-selected', 'true');
       tabElement.setAttribute('tabindex', '0');
 
-      // Sections
       document.querySelectorAll('section[role="tabpanel"]').forEach(sec => {
-        if(sec.id === id) {
-          sec.hidden = false;
-        } else {
-          sec.hidden = true;
-        }
+        sec.hidden = (sec.id !== id);
       });
     }
 
-    // Chart.js - Gráfico de barras
+    // Chart.js gráfico
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {
       type: 'bar',
@@ -932,8 +964,8 @@
     });
 
     // Atualizar Dashboard
-    function atualizarDashboard() {
-      // Estatísticas
+    function atualizarDashboard(produtosFiltrados = produtos) {
+      // Estatísticas (baseadas no array completo)
       const totalProducts = produtos.length;
       const totalSales = produtos.reduce((acc, p) => acc + p.vendas, 0);
       const totalUnits = produtos.reduce((acc, p) => acc + p.unidades, 0);
@@ -944,16 +976,15 @@
       document.getElementById('totalUnits').textContent = totalUnits;
       document.getElementById('totalStock').textContent = totalStock;
 
-      // Gráfico
-      salesChart.data.labels = produtos.map(p => p.nome);
-      salesChart.data.datasets[0].data = produtos.map(p => p.vendas);
+      // Gráfico - usa os produtos filtrados
+      salesChart.data.labels = produtosFiltrados.map(p => p.nome);
+      salesChart.data.datasets[0].data = produtosFiltrados.map(p => p.vendas);
       salesChart.update();
 
-      // Ranking produtos (grid)
+      // Ranking produtos
       const productsGrid = document.getElementById('productsGrid');
       productsGrid.innerHTML = '';
-
-      produtos.forEach((p, i) => {
+      produtosFiltrados.forEach((p, i) => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.setAttribute('tabindex', '0');
@@ -962,6 +993,7 @@
           <div class="product-info">
             <div class="product-sku">${p.sku}</div>
             <div class="product-name">${p.nome}</div>
+            <div class="product-channel">Canal: ${p.canal}</div>
             <div class="product-stats">
               <div class="stat-item">
                 <div class="stat-value">R$ ${p.vendas.toLocaleString('pt-BR')}</div>
@@ -974,20 +1006,21 @@
             </div>
           </div>
         `;
+        card.onclick = () => openModalEditar(p, i);
         productsGrid.appendChild(card);
       });
 
       // Estoque grid
       const stockGrid = document.getElementById('stockGrid');
       stockGrid.innerHTML = '';
-
-      produtos.forEach(p => {
+      produtosFiltrados.forEach(p => {
         const stockCard = document.createElement('div');
         stockCard.className = 'stock-card';
         const estoqueBaixo = p.estoque <= 5;
         stockCard.innerHTML = `
           <div class="stock-sku">${p.sku}</div>
           <div class="stock-name">${p.nome}</div>
+          <div class="stock-channel">${p.canal}</div>
           <div class="stock-quantity">${p.estoque}</div>
           <div class="stock-status ${estoqueBaixo ? 'low-stock' : 'normal-stock'}">${estoqueBaixo ? 'Estoque Baixo' : 'Estoque Normal'}</div>
         `;
@@ -995,61 +1028,44 @@
       });
     }
 
-    // Filtros (básico)
-    const skuFilter = document.getElementById('skuFilter');
-    skuFilter.addEventListener('input', () => {
-      filtrarProdutos();
-    });
+    // Abrir modal editar produto
+    function openModalEditar(produto, index) {
+      produtoEditandoIndex = index;
+      document.getElementById('modalTitle').textContent = `✏️ Editar Produto: ${produto.nome}`;
+      document.getElementById('productSku').value = produto.sku;
+      document.getElementById('productName').value = produto.nome;
+      document.getElementById('productSales').value = produto.vendas;
+      document.getElementById('productUnits').value = produto.unidades;
+      document.getElementById('productStock').value = produto.estoque;
+      document.getElementById('productChannel').value = produto.canal;
+      document.getElementById('productImage').value = produto.imagem || '';
+      productModal.style.display = 'block';
+      productModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('productSku').focus();
+    }
 
-    function filtrarProdutos() {
+    // Filtros
+    skuFilter.addEventListener('input', aplicarFiltros);
+    channelFilter.addEventListener('change', aplicarFiltros);
+
+    function aplicarFiltros() {
       const filtroSku = skuFilter.value.toLowerCase();
-      const produtosFiltrados = produtos.filter(p => p.sku.toLowerCase().includes(filtroSku));
-      atualizarDashboardFiltrado(produtosFiltrados);
-    }
+      const filtroCanal = channelFilter.value;
 
-    function atualizarDashboardFiltrado(produtosFiltrados) {
-      // Atualiza só o ranking e estoque com produtos filtrados, mantém estatísticas e gráfico com todos para simplificar
-      const productsGrid = document.getElementById('productsGrid');
-      productsGrid.innerHTML = '';
-      produtosFiltrados.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.setAttribute('tabindex', '0');
-        card.innerHTML = `
-          <img src="${p.imagem}" alt="Imagem do ${p.nome}" class="product-image" />
-          <div class="product-info">
-            <div class="product-sku">${p.sku}</div>
-            <div class="product-name">${p.nome}</div>
-            <div class="product-stats">
-              <div class="stat-item">
-                <div class="stat-value">R$ ${p.vendas.toLocaleString('pt-BR')}</div>
-                <div class="stat-text">Faturamento</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">${p.unidades}</div>
-                <div class="stat-text">Unidades Vendidas</div>
-              </div>
-            </div>
-          </div>
-        `;
-        productsGrid.appendChild(card);
+      const filtrados = produtos.filter(p => {
+        const skuMatch = p.sku.toLowerCase().includes(filtroSku);
+        const canalMatch = filtroCanal ? p.canal === filtroCanal : true;
+        return skuMatch && canalMatch;
       });
 
-      const stockGrid = document.getElementById('stockGrid');
-      stockGrid.innerHTML = '';
-      produtosFiltrados.forEach(p => {
-        const stockCard = document.createElement('div');
-        stockCard.className = 'stock-card';
-        const estoqueBaixo = p.estoque <= 5;
-        stockCard.innerHTML = `
-          <div class="stock-sku">${p.sku}</div>
-          <div class="stock-name">${p.nome}</div>
-          <div class="stock-quantity">${p.estoque}</div>
-          <div class="stock-status ${estoqueBaixo ? 'low-stock' : 'normal-stock'}">${estoqueBaixo ? 'Estoque Baixo' : 'Estoque Normal'}</div>
-        `;
-        stockGrid.appendChild(stockCard);
-      });
+      atualizarDashboard(filtrados);
     }
+
+    // Fechar modais ao clicar fora do conteúdo
+    window.addEventListener('click', e => {
+      if(e.target === productModal) closeModal();
+      if(e.target === importModal) closeImportModal();
+    });
 
   </script>
 </body>
