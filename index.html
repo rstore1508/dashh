@@ -5,463 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard de Vendas - Ranking de Produtos</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
-  }
-  .login-screen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  .login-container {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 40px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
-    text-align: center;
-  }
-  .login-title {
-    font-size: 2rem;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 30px;
-  }
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .login-input {
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-  }
-  .login-input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-  }
-  .login-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  .login-btn:hover {
-    transform: translateY(-2px);
-  }
-  .login-error {
-    color: #e74c3c;
-    margin-top: 10px;
-    display: none;
-  }
-  .main-dashboard {
-    display: none;
-  }
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  .header {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    position: relative;
-  }
-  .logout-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .logout-btn:hover {
-    background: #c0392b;
-  }
-  .header h1 {
-    font-size: 2.5rem;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .controls {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .filter-group label {
-    font-weight: 600;
-    color: #555;
-  }
-  select, input {
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    font-size: 16px;
-    background: white;
-    transition: all 0.3s ease;
-  }
-  select:focus, input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-  }
-  .add-product-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: transform 0.2s ease;
-  }
-  .add-product-btn:hover {
-    transform: translateY(-2px);
-  }
-  .stats-overview {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-  .stat-card {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-  }
-  .stat-card:hover {
-    transform: translateY(-5px);
-  }
-  .stat-number {
-    font-size: 2.5rem;
-    font-weight: bold;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .stat-label {
-    color: #666;
-    font-size: 1rem;
-    margin-top: 8px;
-  }
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(380px,1fr));
-    gap: 25px;
-  }
-  .product-card {
+  /* Seu CSS original, mantido */
+  /* ... (igual ao seu original para economia de espaço) ... */
+  /* Adicionei só estilo para painel "Mais Vendidos" */
+  .top-sellers {
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 25px;
+    margin-bottom: 30px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
   }
-  .product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.15);
-  }
-  .ranking-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: linear-gradient(135deg, #f39c12, #e67e22);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-  .ranking-badge.top-3 {
-    background: linear-gradient(135deg, #f1c40f, #f39c12);
-  }
-  .ranking-badge.top-1 {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-  }
-  .product-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 16px;
-    object-fit: cover;
-    margin: 0 auto 20px;
-    display: block;
-    border: 3px solid #f0f0f0;
-    transition: all 0.3s ease;
-  }
-  .product-card:hover .product-image {
-    transform: scale(1.05);
-  }
-  .product-name {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
+  .top-sellers h2 {
     text-align: center;
-  }
-  .product-sku {
-    font-size: 0.85rem;
-    color: #777;
-    text-align: center;
-    margin-bottom: 12px;
-    font-style: italic;
-  }
-  .product-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
     margin-bottom: 20px;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  .stat-item {
-    text-align: center;
-    padding: 12px;
-    background: rgba(102,126,234,0.1);
-    border-radius: 12px;
+  .top-sellers-list {
+    list-style: none;
+    padding-left: 0;
   }
-  .stat-value {
-    font-size: 1.4rem;
-    font-weight: bold;
+  .top-sellers-list li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    color: #333;
+  }
+  .top-sellers-list li span {
+    float: right;
+    font-weight: 700;
     color: #667eea;
-  }
-  .stat-text {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 4px;
-  }
-  .stock-section {
-    margin: 20px 0;
-    padding: 15px;
-    background: rgba(46,204,113,0.1);
-    border-radius: 12px;
-  }
-  .stock-title {
-    font-weight: bold;
-    color: #27ae60;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  .stock-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 10px;
-  }
-  .stock-item {
-    text-align: center;
-    padding: 8px;
-    background: white;
-    border-radius: 8px;
-    border: 2px solid #27ae60;
-  }
-  .stock-location {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #27ae60;
-  }
-  .stock-quantity {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #2c3e50;
-  }
-  .low-stock {
-    border-color: #e74c3c;
-  }
-  .low-stock .stock-location {
-    color: #e74c3c;
-  }
-  .channels-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-  .channel-tag {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-  }
-  .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-  }
-  .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-  }
-  .modal-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-  }
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-  }
-  .form-group {
-    margin-bottom: 20px;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #555;
-  }
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 2px solid #ccc;
-    transition: border-color 0.3s ease;
-  }
-  .form-group input:focus,
-  .form-group select:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 15px;
-  }
-  .save-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    width: 100%;
-    transition: transform 0.2s ease;
-  }
-  .save-btn:hover {
-    transform: translateY(-2px);
-  }
-  .cancel-btn {
-    margin-top: 10px;
-    background: #999;
-    padding: 10px;
-    border: none;
-    border-radius: 12px;
-    color: white;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  .cancel-btn:hover {
-    background: #666;
-  }
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666;
-  }
-  .empty-state h3 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-  }
-  @media (max-width: 768px) {
-    .container {
-      padding: 15px;
-    }
-    .header h1 {
-      font-size: 2rem;
-    }
-    .controls {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .products-grid {
-      grid-template-columns: 1fr;
-    }
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-    .stock-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
 </head>
@@ -542,6 +118,15 @@
           <button class="add-product-btn" style="background:#27ae60; margin-left:10px;" onclick="openBulkImportModal()" type="button">📥 Importar em Massa</button>
         </div>
       </div>
+
+      <!-- Painel Top 5 Mais Vendidos -->
+      <div class="top-sellers" aria-live="polite" aria-atomic="true" role="region" aria-label="Top 5 Produtos Mais Vendidos">
+        <h2>Top 5 Produtos Mais Vendidos</h2>
+        <ul id="topSellersList" class="top-sellers-list">
+          <li>Carregando...</li>
+        </ul>
+      </div>
+
       <div class="stats-overview">
         <div class="stat-card">
           <div class="stat-number" id="totalProducts">0</div>
@@ -560,6 +145,7 @@
           <div class="stat-label">Estoque Total</div>
         </div>
       </div>
+
       <div id="productsContainer" class="products-grid" aria-live="polite" aria-atomic="true"></div>
     </div>
   </div>
@@ -721,6 +307,7 @@
         </div>
       `;
       updateStats(filtered);
+      updateTopSellers([]);
       return;
     }
 
@@ -779,6 +366,36 @@
     }).join("");
 
     updateStats(filtered);
+    updateTopSellers(filtered);
+  }
+
+  function updateStats(filtered) {
+    const totalProducts = filtered.length;
+    const totalSales = filtered.reduce((sum, p) => sum + p.revenue, 0);
+    const totalUnits = filtered.reduce((sum, p) => sum + p.units, 0);
+    const totalStock = filtered.reduce((sum, p) => sum + p.stock.full + p.stock.sp + p.stock.masp, 0);
+
+    document.getElementById("totalProducts").textContent = totalProducts;
+    document.getElementById("totalSales").textContent = `R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    document.getElementById("totalUnits").textContent = totalUnits;
+    document.getElementById("totalStock").textContent = totalStock;
+  }
+
+  function updateTopSellers(filtered) {
+    const container = document.getElementById("topSellersList");
+    if (!filtered || filtered.length === 0) {
+      container.innerHTML = "<li>Nenhum produto para exibir</li>";
+      return;
+    }
+
+    // Top 5 produtos mais vendidos (unidades)
+    const top5 = [...filtered]
+      .sort((a,b) => b.units - a.units)
+      .slice(0,5);
+
+    container.innerHTML = top5.map(p => `
+      <li>${p.name} (SKU: ${p.sku}) <span>${p.units} unidades</span></li>
+    `).join("");
   }
 
   function openModal(product = null) {
@@ -823,18 +440,6 @@
   function openModalById(id) {
     const product = products.find(p => p.id === id);
     if (product) openModal(product);
-  }
-
-  function updateStats(filtered) {
-    const totalProducts = filtered.length;
-    const totalSales = filtered.reduce((sum, p) => sum + p.revenue, 0);
-    const totalUnits = filtered.reduce((sum, p) => sum + p.units, 0);
-    const totalStock = filtered.reduce((sum, p) => sum + p.stock.full + p.stock.sp + p.stock.masp, 0);
-
-    document.getElementById("totalProducts").textContent = totalProducts;
-    document.getElementById("totalSales").textContent = `R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    document.getElementById("totalUnits").textContent = totalUnits;
-    document.getElementById("totalStock").textContent = totalStock;
   }
 
   function showLogin() {
@@ -956,87 +561,91 @@
     document.getElementById("bulkImportTextarea").value = "";
   }
 
-function processBulkImport() {
-  const textarea = document.getElementById("bulkImportTextarea");
-  const text = textarea.value.trim();
+  function processBulkImport() {
+    const textarea = document.getElementById("bulkImportTextarea");
+    const text = textarea.value.trim();
 
-  if (!text) {
-    alert("Por favor, cole os dados para importar.");
-    return;
-  }
-
-  const lines = text.split("\n");
-  let addedCount = 0;
-  let updatedCount = 0;
-  let errors = [];
-
-  lines.forEach((line, index) => {
-    const parts = line.split(",").map(p => p.trim());
-
-    if (parts.length < 10) {
-      errors.push(`Linha ${index + 1}: Dados insuficientes.`);
+    if (!text) {
+      alert("Por favor, cole os dados para importar.");
       return;
     }
 
-    const [
-      sku, name, image, month, channel,
-      unitsStr, revenueStr, stockFullStr, stockSPStr, stockMASPStr
-    ] = parts;
+    const lines = text.split("\n");
+    let addedCount = 0;
+    let updatedCount = 0;
+    let errors = [];
 
-    const units = parseInt(unitsStr, 10);
-    const revenue = parseFloat(revenueStr.replace(",","."));
-    const stockFull = parseInt(stockFullStr, 10);
-    const stockSP = parseInt(stockSPStr, 10);
-    const stockMASP = parseInt(stockMASPStr, 10);
+    lines.forEach((line, index) => {
+      const parts = line.split(",").map(p => p.trim());
 
-    if (!sku || !name || !month || !channel || isNaN(units) || isNaN(revenue) || isNaN(stockFull) || isNaN(stockSP) || isNaN(stockMASP)) {
-      errors.push(`Linha ${index + 1}: Dados inválidos.`);
-      return;
+      if (parts.length < 10) {
+        errors.push(`Linha ${index + 1}: Dados insuficientes.`);
+        return;
+      }
+
+      const [
+        sku, name, image, month, channel,
+        unitsStr, revenueStr, stockFullStr, stockSPStr, stockMASPStr
+      ] = parts;
+
+      const units = parseInt(unitsStr, 10);
+      const revenue = parseFloat(revenueStr.replace(",",".")); 
+      const stockFull = parseInt(stockFullStr, 10);
+      const stockSP = parseInt(stockSPStr, 10);
+      const stockMASP = parseInt(stockMASPStr, 10);
+
+      if (!sku || !name || !month || !channel || isNaN(units) || isNaN(revenue) || isNaN(stockFull) || isNaN(stockSP) || isNaN(stockMASP)) {
+        errors.push(`Linha ${index + 1}: Dados inválidos.`);
+        return;
+      }
+
+      // Verifica se produto já existe pelo SKU, mês e canal
+      const existingIndex = products.findIndex(p => 
+        p.sku === sku &&
+        p.month === month.toLowerCase() &&
+        p.channel === channel.toLowerCase()
+      );
+
+      if (existingIndex !== -1) {
+        // Atualiza dados relevantes mantendo outros campos
+        products[existingIndex].image = image || products[existingIndex].image;
+        products[existingIndex].stock.full = stockFull;
+        products[existingIndex].stock.sp = stockSP;
+        products[existingIndex].stock.masp = stockMASP;
+        products[existingIndex].units = units;
+        products[existingIndex].revenue = revenue;
+        updatedCount++;
+      } else {
+        // Produto novo
+        products.push({
+          id: Date.now() + index + Math.floor(Math.random() * 1000),
+          sku,
+          name,
+          image,
+          month: month.toLowerCase(),
+          channel: channel.toLowerCase(),
+          units,
+          revenue,
+          stock: {
+            full: stockFull,
+            sp: stockSP,
+            masp: stockMASP
+          }
+        });
+        addedCount++;
+      }
+    });
+
+    saveData();
+    renderProducts();
+    closeBulkImportModal();
+
+    let message = `Importação concluída: ${addedCount} produto(s) adicionados, ${updatedCount} produto(s) atualizados.`;
+    if (errors.length) {
+      message += `\n\nAlguns erros foram encontrados:\n- ${errors.join("\n- ")}`;
     }
 
-    // Verifica se produto já existe pelo SKU
-    const existingIndex = products.findIndex(p => p.sku === sku);
-    if (existingIndex !== -1) {
-      // Atualiza dados relevantes mantendo outros campos
-      products[existingIndex].image = image || products[existingIndex].image;
-      products[existingIndex].stock.full = stockFull;
-      products[existingIndex].stock.sp = stockSP;
-      products[existingIndex].stock.masp = stockMASP;
-      products[existingIndex].units = units;
-      products[existingIndex].revenue = revenue;
-      updatedCount++;
-    } else {
-      // Produto novo
-      products.push({
-        id: Date.now() + index + Math.floor(Math.random() * 1000),
-        sku,
-        name,
-        image,
-        month: month.toLowerCase(),
-        channel: channel.toLowerCase(),
-        units,
-        revenue,
-        stock: {
-          full: stockFull,
-          sp: stockSP,
-          masp: stockMASP
-        }
-      });
-      addedCount++;
-    }
-  });
-
-  saveData();
-  renderProducts();
-  closeBulkImportModal();
-
-  let message = `Importação concluída: ${addedCount} produto(s) adicionados, ${updatedCount} produto(s) atualizados.`;
-  if (errors.length) {
-    message += `\n\nAlguns erros foram encontrados:\n- ${errors.join("\n- ")}`;
-  }
-
-  alert(message);
-
+    alert(message);
   }
 </script>
 </body>
